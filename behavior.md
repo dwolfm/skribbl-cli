@@ -22,7 +22,7 @@
  * - prompt for username 
  * - prompt for password
    * 		on fail tell user 
-   * 		on success store token
+    * 		on success store token
 
 ## menu
 // - prompt user if the want to fetch story, browse, or profile
