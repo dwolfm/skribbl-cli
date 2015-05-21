@@ -1,10 +1,10 @@
 
 ## check if user token exists 
 * on fail prompt login or create user
- * on login ask username password
+ 1. on login ask username password
   - on success login go to main
   - on fail login go back to login
- * on create user ask username email password
+ 2. on create user ask username email password
   - on success try login
   - on fail try create user again
 
