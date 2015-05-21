@@ -23,13 +23,12 @@ function checkForToken(){
 		if (exists) {
 			token.gettoken(function(err, data){
 			if (err) throw err;
-			userToken = data;
-			return menu();
-		});
-	} else {
-		//runCreateUser();
-		runLoginvsCreate();
-	}
+				userToken = data;
+				return menu();
+			});
+		} else {
+			runLoginvsCreate();
+		}
 	});
 }
 
