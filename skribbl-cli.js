@@ -17,7 +17,6 @@ function menu(){
 	readline('---> '.green);
 }
 
-menu();
 
 function checkForToken(){
 	settings.checkForToken(function(exists){
@@ -33,6 +32,33 @@ function checkForToken(){
 	});
 }
 
+function runCreateUser(){
+	console.log('what do you want your username to be?'.cyan);
+	var username = readline('--->'.green);
+	console.log('what is your email?'.cyan);
+	var email = readline('--->'.green);
+	makePassword(username, email);
+}
+
+function runMakePassword(uname, email){
+	console.log('what do you want your password to be?'.cyan);
+	var pass1 = readline('--->'.green);
+	console.log('type your password again.'.cyan);
+	var pass2 = readline('--->'.green);
+	if (pass1 === pass2) {
+		createUser(skribblURL, uname, email, pass1 , function(err, data){
+			if (err) {
+				console.log('errr: something went wrong'.red);
+				console.log(data);
+				return runCreateUser();
+			}
+			// login and save token
+		});	
+	}
+	console.log('passwords didnt match'.rainbow);
+	runMakePassword(uname, email);
+}
+
 function login(){
 	console.log('what is your usrename?'.cyan);
 	readline('---> '.green);
@@ -40,6 +66,7 @@ function login(){
 	readline('---> '.green);
 }
 
+menu();
 // check user token 
 // 		on fail prompt login or create user
 //		on success login
