@@ -5,7 +5,7 @@
 
 ## create user
 * - propt unique username
-* - prompt unique email
+ * - prompt unique email
 * - prompt password
 * 		on fail retry
 *		on success try login
