@@ -15,7 +15,22 @@ function menu(){
 	console.log('---> s to start skribblin'.red);
 	console.log('---> t to see your timeline'.red);
 	console.log('---> b to browse storys'.red);
-	readline('---> '.green);
+	var input = readline('---> '.green);
+	handleUserInput(input, ['q', 's', 't', 'b'], menu);
+	switch (input) {
+		case 'q':
+			return runQuit();
+			break;
+		case 's':
+			return runStartSkribblin();
+			break;
+		case 't':
+			return runTimeline();
+			break;
+		case 'b':
+			return runBrowse();
+			break;
+	}
 }
 
 function checkForToken(){
@@ -32,8 +47,9 @@ function checkForToken(){
 	});
 }
 
-function loopback(input, validateArray, back){
+function handleUserInput(input, validateArray, back){
 	if (validateArray.indexOf(input) < 0) {
+		console.log('srry yo, dat was not a valid input :(.'.blue);
 		return back();
 	}
 	return;
@@ -44,7 +60,7 @@ function runLoginvsCreate(){
 	console.log('---> l for login'.red);
 	console.log('---> c for create new account'.red);
 	var input = readline('---> '.green);
-	loopback(input, ['l','c'], runLoginvsCreate);
+	handleUserInput(input, ['l','c'], runLoginvsCreate);
 	if (input == 'l') return runLogin();	
 	return runCreateUser();
 }
@@ -82,11 +98,16 @@ function handleLogin(err, data){
 	if (err) {
 		console.log('erororor: something went wrong lgin in'.red);
 		console.log(data);
+		return runLoginvsCreate(); 
+	}
+	if (!data.eat){
+		console.log('yaw maing that username or pasword was incorrect');
+		return runLoginvsCreate(); 
 	}	
 	token.settoken(data.eat, function(err){
 		if (err) {
 			console.log('eeek: there was an err storing ur token'.red);
-			runLogin();
+			return runLoginvsCreate(); 
 		}
 		menu();
 	});
@@ -100,4 +121,27 @@ function runLogin(){
 	login(skribblURL, username, passwd, handleLogin);
 }
 
+function runStartSkribblin(){
+	console.log('should fetch a skribbl story'.magenta);
+	menu();
+}
+
+function runQuit(){
+	console.log('bye, thank you!');
+	return;
+}
+
+function runBrowse(){
+	console.log('should fetch /api/story'.magenta);
+	menu();
+}
+
+function runTimeline(){
+	console.log('should fetch /api/timeline'.magenta);
+	menu();
+}
+// start program
 checkForToken();
+
+
+
