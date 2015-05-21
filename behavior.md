@@ -6,7 +6,7 @@
     - on fail login go back to login
  2. on create user ask username email password
    - on success try login
-   - on fail try create user again
+    - on fail try create user again
 
 ## create user
 * - propt unique username
