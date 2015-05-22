@@ -19,12 +19,14 @@ var userName = null;
 checkForToken();
 
 function menu(){
-	console.log('skribble actions menu:'.cyan);
-	console.log('---> q to quit'.red);
-	console.log('---> s to start skribblin on existing srkibbl'.red);
-	console.log('---> n to start a new skribbl'.red);
-	console.log('---> t to see your timeline'.red);
-	console.log('---> b to browse storys'.red);
+	console.log();
+	console.log('skribble actions menu:                             '.cyan.bold.bgMagenta);
+	console.log('---> q to quit                                     '.black.bold.bgCyan);
+	console.log('---> s to start skribblin on existing srkibbl      '.black.bold.bgCyan);
+	console.log('---> n to start a new skribbl                      '.black.bold.bgCyan);
+	console.log('---> t to see your timeline                        '.black.bold.bgCyan);
+	console.log('---> b to browse storys                            '.black.bold.bgCyan);
+	console.log();
 	var input = readline('---> '.green);
 	handleUserInput(input, ['q', 's', 't', 'b', 'l', 'n'], menu);
 	switch (input) {
@@ -68,9 +70,10 @@ function handleUserInput(input, validateArray, back){
 
 function runLoginvsCreate(){
 	console.log('yo dawg, you haven\'t loged in b4!'.rainbow);
-	console.log('---> l for login'.red);
-	console.log('---> c for create new account'.red);
-	console.log('---> q to quit'.red);
+	console.log('---> l for login'.cyan);
+	console.log('---> c for create new account'.cyan);
+	console.log('---> q to quit'.cyan);
+	console.log();
 	var input = readline('---> '.green);
 	handleUserInput(input, ['l','c', 'q'], runLoginvsCreate);
 	if (input == 'l') return runLogin();	
@@ -80,22 +83,26 @@ function runLoginvsCreate(){
 
 function runCreateUser(){
 	console.log('what do you want your username to be?'.cyan);
+	console.log();
 	var username = readline('---> '.green);
 	userName = username;
 	console.log('what is your email?'.cyan);
+	console.log();
 	var email = readline('---> '.green);
 	runMakePassword(username, email);
 }
 
 function runMakePassword(uname, email){
 	console.log('what do you want your password to be?'.cyan);
+	console.log();
 	var pass1 = readline('---> '.green);
 	console.log('type your password again.'.cyan);
+	console.log();
 	var pass2 = readline('---> '.green);
 	if (pass1 === pass2) {
 		createUser(skribblURL, uname, email, pass1 , function(err, data){
 			if (err) {
-				console.log('errr: something went wrong'.red);
+				console.log('errr: something went wrong'.cyan);
 				console.log(data);
 				return runCreateUser();
 			}
@@ -111,7 +118,7 @@ function runMakePassword(uname, email){
 
 function handleLogin(err, data){
 	if (err) {
-		console.log('erororor: something went wrong lgin in'.red);
+		console.log('erororor: something went wrong lgin in'.cyan);
 		console.log(data);
 		return runLoginvsCreate(); 
 	}
@@ -122,7 +129,7 @@ function handleLogin(err, data){
 	userToken = data.eat;
 	token.settoken(data.eat, userName, function(err){
 		if (err) {
-			console.log('eeek: there was an err storing ur token'.red);
+			console.log('eeek: there was an err storing ur token'.cyan);
 			return runLoginvsCreate(); 
 		}
 		menu();
@@ -131,9 +138,11 @@ function handleLogin(err, data){
 
 function runLogin(){
 	console.log('what is your usrename?'.cyan);
+	console.log();
 	var username = readline('---> '.green);
 	userName = username;
 	console.log('what is your password?'.cyan);
+	console.log();
 	var passwd = readline('---> '.green);
 	login(skribblURL, username, passwd, handleLogin);
 }
@@ -155,7 +164,6 @@ function runQuit(){
 }
 
 function runBrowse(){
-	console.log('should fetch /api/story'.magenta);
 	storysBrowse(skribblURL, function(err, res){
 		if (err){
 			console.log('something went wrong'.blue);
@@ -166,7 +174,7 @@ function runBrowse(){
 }
 
 function handleBrowser(res, startPos){
-	console.log('chose a story!'.red);
+	console.log('chose a story!'.cyan);
 	var printCount = startPos + 5;
 	if (res.length < 0) {
 		console.log('no storys were found, you should go write one :)'.blue);
@@ -178,9 +186,10 @@ function handleBrowser(res, startPos){
 		console.log((i+1) + '   ' + res[i].story_name.blue + '\n        ' + res[i].content.substr(0, 42).trim() + '...'.green); 
 		optionsArry.push(Number(i+1).toString());
 	}	
-	console.log('---> m to browse more storys'.red);
-	console.log('---> b to return to menu'.red);
-	console.log('---> [num] to read and fork story...'.red);
+	console.log('---> m to browse more storys'.cyan);
+	console.log('---> b to return to menu'.cyan);
+	console.log('---> [num] to read and fork story...'.cyan);
+	console.log();
 	var input = readline('---> '.green);
 	if (optionsArry.indexOf(input) < 0) {
 		console.log('yo that input didnt work'.blue);
@@ -189,6 +198,9 @@ function handleBrowser(res, startPos){
 	}
 	if (input == 'q') {
 		return runQuit();
+	}
+	if (input == 'b'){
+		return menu();
 	}
 	if (input == 'm') {
 		startPos = startPos + 5;
@@ -222,8 +234,8 @@ function handkleSkribblChildren(skribblTree){
 	console.log();
 	if (first_skribbl.children.length == 0) {
 		console.log('you have foundyourself at the maximum depth o\' dis story'.blue);
-		//console.log('---> f to fork and coninue the story'.red);
-		//console.log('---> b to return to menu'.red);
+		//console.log('---> f to fork and coninue the story'.cyan);
+		//console.log('---> b to return to menu'.cyan);
 	}
 	var inputValidation = ['f', 'b']
 	for (var i = 0; i < first_skribbl.children.length; i++){
@@ -231,8 +243,9 @@ function handkleSkribblChildren(skribblTree){
 		inputValidation.push(Number(i+1).toString());
 	}	
 		console.log();
-		console.log('---> f to fork and coninue the story'.red);
-		console.log('---> b to return to menu'.red);
+		console.log('---> f to fork and coninue the story'.cyan);
+		console.log('---> b to return to menu'.cyan);
+	console.log();
 		var input = readline('---> '.green);
 		if (inputValidation.indexOf(input) < 0) {
 			console.log('yiksies, that wernt a choose');
@@ -260,7 +273,6 @@ function handkleSkribblChildren(skribblTree){
 
 
 function runTimeline(){
-	console.log('should fetch /api/timeline'.magenta);
 	fetchTimeline(skribblURL, userName, function(err, res){
 		if (err) {
 			console.log('sorry to inform you, i know this might be hard on the ears\nbut you dont exists'.magenta);
@@ -287,11 +299,14 @@ function runCreateNewStory(){
 	var skribblObj = {};
 	console.log('every storys gotta start somewhere eh'.magenta);	
 	console.log('wuts the title of this story gunna be?');
+	console.log();
 	skribblObj.story_name = readline('---> '.green);
 	console.log('wart genre gunna be dis soon too be page-turner?'.magenta);
+	console.log();
 	skribblObj.genre = readline('---> '.green);
 	console.log('eh, whuteva... i guess that doesnt sound tooo clechie'.magenta);
 	console.log('start ur story then!'.magenta);
+	console.log();
 	skribblObj.content = readline('---> '.green);
 	skribblObj.parent_skribbl = null;
 	console.log('username: ' + userName );
@@ -316,7 +331,8 @@ function handleForkAStory(story_name, parrent_id, story_id, genre){
 	skribblObj.parent_skribbl = parrent_id;
 	skribblObj.author = userName;
 	skribblObj.genre = genre;
-	console.log('nows your chance to ruin this cute attempt at literature\ngo ahead... do your worst!'.red); 
+	console.log('nows your chance to ruin this cute attempt at literature\ngo ahead... do your worst!'.cyan); 
+	console.log();
 	var input = readline('---> '.green);
 	if (input == '') {
 		console.log('awww sluuuug, i wont let you get away with not trying... write something'.blue);
