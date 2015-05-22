@@ -135,7 +135,7 @@ function handleLogin(err, data){
 }
 
 function runLogin(){
-	console.log('wat is your email?'.cyan);
+	console.log('wat is your username?'.cyan);
 	console.log();
 	var username = readline('---> '.green);
 	userName = username;
