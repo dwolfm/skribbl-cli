@@ -5,35 +5,35 @@ var colors = require('colors');
 var token = require('./lib/token.js');
 var createUser = require('./lib/routes/users_routes.js').createUser;
 var login = require('./lib/routes/users_routes.js').loginUser;
+var postSkribbl = require('./lib/routes/skribbl_routes.js').createSkribbl;
 var storysBrowse = require('./lib/routes/story_routes.js').main;
 
-var skribblURL = 'localhost:3000';
+var skribblURL = 'https://skribbl-app.herokuapp.com';
 var userToken = null;
+var userName = null;
 
 function menu(){
 	console.log('skribble actions menu:'.cyan);
 	console.log('---> q to quit'.red);
-	console.log('---> s to start skribblin'.red);
+	console.log('---> s to start skribblin on existing srkibbl'.red);
+	console.log('---> n to start a new skribbl'.red);
 	console.log('---> t to see your timeline'.red);
 	console.log('---> b to browse storys'.red);
 	var input = readline('---> '.green);
-	handleUserInput(input, ['q', 's', 't', 'b', 'l'], menu);
+	handleUserInput(input, ['q', 's', 't', 'b', 'l', 'n'], menu);
 	switch (input) {
 		case 'q':
 			return runQuit();
-			break;
 		case 's':
 			return runStartSkribblin();
-			break;
 		case 't':
 			return runTimeline();
-			break;
 		case 'b':
 			return runBrowse();
-			break;
 		case 'l':
 			return runLogout();
-			break ;
+		case 'n':
+			return runCreateNewStory();
 	}
 }
 
@@ -42,7 +42,8 @@ function checkForToken(){
 		if (exists) {
 			token.gettoken(function(err, data){
 			if (err) throw err;
-				userToken = data;
+				userToken = data.token;
+				userName = data.author;
 				return menu();
 			});
 		} else {
@@ -74,6 +75,7 @@ function runLoginvsCreate(){
 function runCreateUser(){
 	console.log('what do you want your username to be?'.cyan);
 	var username = readline('---> '.green);
+	userName = username;
 	console.log('what is your email?'.cyan);
 	var email = readline('---> '.green);
 	runMakePassword(username, email);
@@ -111,7 +113,8 @@ function handleLogin(err, data){
 		console.log('yaw maing that username or pasword was incorrect');
 		return runLoginvsCreate(); 
 	}	
-	token.settoken(data.eat, function(err){
+	userToken = data.eat;
+	token.settoken(data.eat, userName, function(err){
 		if (err) {
 			console.log('eeek: there was an err storing ur token'.red);
 			return runLoginvsCreate(); 
@@ -123,6 +126,7 @@ function handleLogin(err, data){
 function runLogin(){
 	console.log('what is your usrename?'.cyan);
 	var username = readline('---> '.green);
+	userName = username;
 	console.log('what is your password?'.cyan);
 	var passwd = readline('---> '.green);
 	login(skribblURL, username, passwd, handleLogin);
@@ -165,5 +169,32 @@ function runLogout(){
 		return runQuit();
 	});
 }
+
+function runCreateNewStory(){
+	var skribblObj = {};
+	console.log('every storys gotta start somewhere eh'.magenta);	
+	console.log('wuts the title of this story gunna be?');
+	skribblObj.story_name = readline('---> '.green);
+	console.log('wart genre gunna be dis soon too be page-turner?'.magenta);
+	skribblObj.genre = readline('---> '.green);
+	console.log('eh, whuteva... i guess that doesnt sound tooo clechie'.magenta);
+	console.log('start ur story then!'.magenta);
+	skribblObj.content = readline('---> '.green);
+	skribblObj.parent_skribbl = null;
+	console.log('username: ' + userName );
+	console.log('token: ' + userToken);
+	skribblObj.author = userName;
+	postSkribbl( skribblURL, skribblObj, userToken, function(err, data){
+		if (err) {
+			console.log(err.response.res.body);
+			console.log('yikes, sury buddy that didnt work'.blue);
+			return menu();
+		}
+		console.log('lul, your gunna be a rock star!'.magenta);
+		console.log(data);
+		return menu();
+	});
+}
+
 // start program
 checkForToken();
