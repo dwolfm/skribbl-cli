@@ -214,8 +214,8 @@ function handkleSkribblChildren(skribblTree){
 	console.log();
 	if (first_skribbl.children.length == 0) {
 		console.log('you have foundyourself at the maximum depth o\' dis story'.blue);
-		console.log('---> f to fork and coninue the story'.red);
-		console.log('---> b to return to menu'.red);
+		//console.log('---> f to fork and coninue the story'.red);
+		//console.log('---> b to return to menu'.red);
 	}
 	var inputValidation = ['f', 'b']
 	for (var i = 0; i < first_skribbl.children.length; i++){
@@ -231,14 +231,25 @@ function handkleSkribblChildren(skribblTree){
 			return handkleSkribblChildren(skribblTree);
 		}
 		if (input == 'f') {
-			return console.log('handle fork here'.magenta);
+			var parnt_id = first_skribbl._id;
+			var stry_name = first_skribbl.story_name;
+			var stry_id;
+			if (first_skribbl.parent_skribbl == null) {
+				stry_id = first_skribbl._id;
+			} else {
+				stry_id = first_skribbl.story_id;
+			}
+			var gnre = first_skribbl.genre;
+			return handleForkAStory(stry_name, parnt_id, stry_id, gnre);
 		}
 		if (input == 'b') {
 			return menu();
 		}
 		var selectedIndex = Number(input) - 1;
-		handleRunSkribbl(first_skribbl.children[selectedIndex]._id);
+		return handleRunSkribbl(first_skribbl.children[selectedIndex]._id);
 }
+
+
 
 function runTimeline(){
 	console.log('should fetch /api/timeline'.magenta);
@@ -279,6 +290,32 @@ function runCreateNewStory(){
 		console.log('lul, your gunna be a rock star!'.magenta);
 		console.log(data);
 		return menu();
+	});
+}
+
+function handleForkAStory(story_name, parrent_id, story_id, genre){
+	var skribblObj = {}
+	skribblObj.story_name = story_name;
+	skribblObj.story_id = story_id;
+	skribblObj.parent_skribbl = parrent_id;
+	skribblObj.author = userName;
+	skribblObj.genre = genre;
+	console.log('nows your chance to ruin this cute attempt at literature\ngo ahead... do your worst!'.red); 
+	var input = readline('---> '.green);
+	if (input == '') {
+		console.log('awww sluuuug, i wont let you get away with not trying... write something'.blue);
+		return handleForkAStory(story_name, parrent_id, story_id, genre);
+	}
+	skribblObj.content = input;
+	postSkribbl(skribblURL, skribblObj, userToken, function(err, res) {
+		if (err){
+			console.log(err.response.res.body);
+			console.log('fudge bro. ive faild you, that didnt quite work on my end'.blue);
+			return menu();
+		}
+		console.log('wow, beautiful work homie, i can tell ur gunnz be a valuble member of the skribbl comunity'.blue);
+		return menu();
+
 	});
 }
 
