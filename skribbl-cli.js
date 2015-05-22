@@ -7,6 +7,8 @@ var createUser = require('./lib/routes/users_routes.js').createUser;
 var login = require('./lib/routes/users_routes.js').loginUser;
 var postSkribbl = require('./lib/routes/skribbl_routes.js').createSkribbl;
 var storysBrowse = require('./lib/routes/story_routes.js').main;
+var fetchSkribbl = require('./lib/routes/skribbl_routes.js').getSkribblTree;
+var wordWrap = require('word-wrap');
 
 var skribblURL = 'https://skribbl-app.herokuapp.com';
 var userToken = null;
@@ -188,8 +190,54 @@ function handleBrowser(res, startPos){
 		}
 		return handleBrowser(res, startPos);
 	}
-	console.log('time to fetch a skribble route'.magenta);
+	var selectedStory = res[Number(input) -1];
+	return handleRunSkribbl(selectedStory._id);
+}
 
+function handleRunSkribbl(skribblId){
+	fetchSkribbl(skribblURL, skribblId, function(err, res){
+		if (err) {
+			console.log(err);
+			console.log('sorry buba, something went afuss trying to get your skribbls'.magenta);
+			return menu();
+		}
+		handkleSkribblChildren(res);
+
+	});	
+}
+
+function handkleSkribblChildren(skribblTree){
+	console.log();
+	var first_skribbl = skribblTree[0];
+	console.log('\t\t\tstory: '.green + first_skribbl.story_name.blue);
+	console.log(wordWrap(first_skribbl.content, {indent: '     ', width: 60}));
+	console.log();
+	if (first_skribbl.children.length == 0) {
+		console.log('you have foundyourself at the maximum depth o\' dis story'.blue);
+		console.log('---> f to fork and coninue the story'.red);
+		console.log('---> b to return to menu'.red);
+	}
+	var inputValidation = ['f', 'b']
+	for (var i = 0; i < first_skribbl.children.length; i++){
+		console.log( (i + 1) + '    ' + first_skribbl.children[i].content.substr(0, 40).trim() + '...'.green);
+		inputValidation.push(Number(i+1).toString());
+	}	
+		console.log();
+		console.log('---> f to fork and coninue the story'.red);
+		console.log('---> b to return to menu'.red);
+		var input = readline('---> '.green);
+		if (inputValidation.indexOf(input) < 0) {
+			console.log('yiksies, that wernt a choose');
+			return handkleSkribblChildren(skribblTree);
+		}
+		if (input == 'f') {
+			return console.log('handle fork here'.magenta);
+		}
+		if (input == 'b') {
+			return menu();
+		}
+		var selectedIndex = Number(input) - 1;
+		handleRunSkribbl(first_skribbl.children[selectedIndex]._id);
 }
 
 function runTimeline(){
