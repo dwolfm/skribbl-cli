@@ -12,6 +12,8 @@ var skribblURL = 'https://skribbl-app.herokuapp.com';
 var userToken = null;
 var userName = null;
 
+checkForToken();
+
 function menu(){
 	console.log('skribble actions menu:'.cyan);
 	console.log('---> q to quit'.red);
@@ -139,19 +141,55 @@ function runStartSkribblin(){
 
 function runQuit(){
 	console.log('bye, thank you!');
-	return;
+	return 0;
 }
 
 function runBrowse(){
 	console.log('should fetch /api/story'.magenta);
-	storysBrowse(skribblURL, function(err, data){
+	storysBrowse(skribblURL, function(err, res){
 		if (err){
 			console.log('something went wrong'.blue);
 			return menu();
 		}
-		console.log(data);
-		menu();
+		handleBrowser(res, 0);
 	});
+}
+
+function handleBrowser(res, startPos){
+	console.log('chose a story!'.red);
+	var printCount = startPos + 5;
+	if (res.length < 0) {
+		console.log('no storys were found, you should go write one :)'.blue);
+		return menu();
+	}
+	if (res.length < printCount ) printCount = res.length;
+	var optionsArry = ['m', 'q', 'b']
+	for (var i = startPos; i < printCount; i++){
+		console.log((i+1) + '   ' + res[i].story_name.blue + '\n        ' + res[i].content.substr(0, 42).trim() + '...'.green); 
+		optionsArry.push(Number(i+1).toString());
+	}	
+	console.log('---> m to browse more storys'.red);
+	console.log('---> b to return to menu'.red);
+	console.log('---> [num] to read and fork story...'.red);
+	var input = readline('---> '.green);
+	if (optionsArry.indexOf(input) < 0) {
+		console.log('yo that input didnt work'.blue);
+		console.log(optionsArry);
+		return handleBrowser(res, startPos);
+	}
+	if (input == 'q') {
+		return runQuit();
+	}
+	if (input == 'm') {
+		startPos = startPos + 5;
+		if (printCount == res.length) {
+			console.log('thats all she wrote, cant find any more storys'.blue);
+			return handleBrowser(res, 0);
+		}
+		return handleBrowser(res, startPos);
+	}
+	console.log('time to fetch a skribble route'.magenta);
+
 }
 
 function runTimeline(){
@@ -197,4 +235,3 @@ function runCreateNewStory(){
 }
 
 // start program
-checkForToken();
