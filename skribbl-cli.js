@@ -16,7 +16,7 @@ function menu(){
 	console.log('---> t to see your timeline'.red);
 	console.log('---> b to browse storys'.red);
 	var input = readline('---> '.green);
-	handleUserInput(input, ['q', 's', 't', 'b'], menu);
+	handleUserInput(input, ['q', 's', 't', 'b', 'l'], menu);
 	switch (input) {
 		case 'q':
 			return runQuit();
@@ -30,6 +30,9 @@ function menu(){
 		case 'b':
 			return runBrowse();
 			break;
+		case 'l':
+			return runLogout();
+			break ;
 	}
 }
 
@@ -59,9 +62,11 @@ function runLoginvsCreate(){
 	console.log('yo dawg, you haven\'t loged in b4!'.rainbow);
 	console.log('---> l for login'.red);
 	console.log('---> c for create new account'.red);
+	console.log('---> q to quit'.red);
 	var input = readline('---> '.green);
-	handleUserInput(input, ['l','c'], runLoginvsCreate);
+	handleUserInput(input, ['l','c', 'q'], runLoginvsCreate);
 	if (input == 'l') return runLogin();	
+	if (input == 'q') return runQuit();
 	return runCreateUser();
 }
 
@@ -86,12 +91,11 @@ function runMakePassword(uname, email){
 				return runCreateUser();
 			}
 			// login and save token
-			login(skribblURL, uname, pass1, handleLogin);
+			return login(skribblURL, uname, pass1, handleLogin);
 		});	
-	} else {
-			console.log('passwords didnt match'.rainbow);
-		runMakePassword(uname, email);
-	}
+	} 
+	console.log('passwords didnt match'.rainbow);
+	runMakePassword(uname, email);
 }
 
 function handleLogin(err, data){
@@ -139,6 +143,11 @@ function runBrowse(){
 function runTimeline(){
 	console.log('should fetch /api/timeline'.magenta);
 	menu();
+}
+
+function runLogout(){
+	console.log('should delete user token'.magenta);
+	runQuit();
 }
 // start program
 checkForToken();
