@@ -21,7 +21,7 @@ checkForToken();
 
 function menu(){
 	console.log();
-	console.log('skribble actions menu:                             '.cyan.bold.bgMagenta);
+	console.log('               skribbl actions menu:               '.black.bold.bgMagenta);
 	console.log('---> q to quit                                     '.black.bold.bgCyan);
 	console.log('---> s to start skribblin on existing srkibbl      '.black.bold.bgCyan);
 	console.log('---> n to start a new skribbl                      '.black.bold.bgCyan);
@@ -104,7 +104,6 @@ function runMakePassword(uname, email){
 		createUser(skribblURL, uname, email, pass1 , function(err, data){
 			if (err) {
 				console.log('errr: something went wrong'.cyan);
-				console.log(data);
 				return runCreateUser();
 			}
 			// login and save token
@@ -119,7 +118,6 @@ function runMakePassword(uname, email){
 function handleLogin(err, data){
 	if (err) {
 		console.log('erororor: something went wrong lgin in'.cyan);
-		console.log(err);
 		return runLoginvsCreate(); 
 	}
 	if (!data.eat){
@@ -216,7 +214,6 @@ function handleBrowser(res, startPos){
 function handleRunSkribbl(skribblId){
 	fetchSkribbl(skribblURL, skribblId, function(err, res){
 		if (err) {
-			console.log(err);
 			console.log('sorry buba, something went afuss trying to get your skribbls'.magenta);
 			return menu();
 		}
@@ -307,12 +304,9 @@ function runCreateNewStory(){
 	console.log();
 	skribblObj.content = readline('---> '.green);
 	skribblObj.parent_skribbl = null;
-	console.log('username: ' + userName );
-	console.log('token: ' + userToken);
 	skribblObj.author = userName;
 	postSkribbl( skribblURL, skribblObj, userToken, function(err, data){
 		if (err) {
-			console.log(err.response.res.body);
 			console.log('yikes, sury buddy that didnt work'.blue);
 			return menu();
 		}
@@ -339,7 +333,6 @@ function handleForkAStory(story_name, parrent_id, story_id, genre){
 	skribblObj.content = input;
 	postSkribbl(skribblURL, skribblObj, userToken, function(err, res) {
 		if (err){
-			console.log(err.response.res.body);
 			console.log('fudge bro. ive faild you, that didnt quite work on my end'.blue);
 			return menu();
 		}
