@@ -94,10 +94,10 @@ function runCreateUser(){
 }
 
 function runMakePassword(uname, email){
-	console.log('what do you want your password to be?'.cyan);
+	console.log('what do uu not want ur password to not be?'.cyan);
 	console.log();
 	var pass1 = readline('---> '.green);
-	console.log('type your password again.'.cyan);
+	console.log('yo betta tyype your password again foe da numa one\nverificationanashon dat you know what you dun typesed.'.cyan);
 	console.log();
 	var pass2 = readline('---> '.green);
 	if (pass1 === pass2) {
@@ -110,7 +110,7 @@ function runMakePassword(uname, email){
 			login(skribblURL, email, pass1, handleLogin);
 		});	
 	}else { 
-	console.log('passwords didnt match'.rainbow);
+	console.log('dem friggin passwords aint match'.rainbow);
 	runMakePassword(uname, email);
 	}
 }
@@ -127,7 +127,7 @@ function handleLogin(err, data){
 	userToken = data.eat;
 	token.settoken(data.eat, userName, function(err){
 		if (err) {
-			console.log('eeek: there was an err storing ur token'.cyan);
+			console.log('eeek: there was an err barrying ur login deets'.cyan);
 			return runLoginvsCreate(); 
 		}
 		menu();
@@ -135,14 +135,17 @@ function handleLogin(err, data){
 }
 
 function runLogin(){
-	console.log('what is your usrename?'.cyan);
+	console.log('wat is your email?'.cyan);
 	console.log();
 	var username = readline('---> '.green);
 	userName = username;
-	console.log('what is your password?'.cyan);
+	console.log('what is your numba one topsy sekret  password?'.cyan);
 	console.log();
 	var passwd = readline('---> '.green);
-	login(skribblURL, username, passwd, handleLogin);
+	console.log('eau yea, seu um, like what is your email?'.cyan);
+	console.log();
+	var email = readline('---> '.green);
+	login(skribblURL, email, passwd, handleLogin);
 }
 
 function runStartSkribblin(){
@@ -163,7 +166,7 @@ function runQuit(){
 function runBrowse(){
 	storysBrowse(skribblURL, function(err, res){
 		if (err){
-			console.log('something went wrong'.blue);
+			console.log('ithink some something went wrong'.blue);
 			return menu();
 		}
 		handleBrowser(res, 0);
