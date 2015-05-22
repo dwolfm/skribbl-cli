@@ -148,11 +148,14 @@ function runTimeline(){
 }
 
 function runLogout(){
-	console.log('should delete user token'.magenta);
-	runQuit();
+	token.deletetoken(function(err){
+		if (err) {
+			console.log('problem loging out');
+			return menu();
+		}
+		console.log('you have loged out'.magenta);
+		return runQuit();
+	});
 }
 // start program
 checkForToken();
-
-
-
