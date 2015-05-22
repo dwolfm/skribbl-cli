@@ -5,6 +5,7 @@ var colors = require('colors');
 var token = require('./lib/token.js');
 var createUser = require('./lib/routes/users_routes.js').createUser;
 var login = require('./lib/routes/users_routes.js').loginUser;
+var storysBrowse = require('./lib/routes/story_routes.js').main;
 
 var skribblURL = 'localhost:3000';
 var userToken = null;
@@ -139,7 +140,14 @@ function runQuit(){
 
 function runBrowse(){
 	console.log('should fetch /api/story'.magenta);
-	menu();
+	storysBrowse(skribblURL, function(err, data){
+		if (err){
+			console.log('something went wrong'.blue);
+			return menu();
+		}
+		console.log(data);
+		menu();
+	});
 }
 
 function runTimeline(){
