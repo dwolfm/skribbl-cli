@@ -10,6 +10,7 @@ var storysBrowse = require('./lib/routes/story_routes.js').main;
 var fetchSkribbl = require('./lib/routes/skribbl_routes.js').getSkribblTree;
 var wordWrap = require('word-wrap');
 var randomStoryFetch = require('./lib/routes/story_routes.js').random;
+var fetchTimeline = require('./lib/routes/timeline_routes.js').timelineById;
 
 var skribblURL = 'https://skribbl-app.herokuapp.com';
 var userToken = null;
@@ -260,7 +261,15 @@ function handkleSkribblChildren(skribblTree){
 
 function runTimeline(){
 	console.log('should fetch /api/timeline'.magenta);
-	menu();
+	fetchTimeline(skribblURL, userName, function(err, res){
+		if (err) {
+			console.log('sorry to inform you, i know this might be hard on the ears\nbut you dont exists'.magenta);
+			return menu();
+		}
+		console.log('heres all your posts'.blue);
+		return handleBrowser(res, 0);
+		menu();
+	});
 }
 
 function runLogout(){
