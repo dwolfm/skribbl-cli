@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 var readline = require('readline-sync').question;
@@ -109,7 +110,6 @@ function runMakePassword(uname, email){
 			// login and save token
 			login(skribblURL, uname, pass1, handleLogin);
 		});	
-		;
 	}else { 
 	console.log('passwords didnt match'.rainbow);
 	runMakePassword(uname, email);
@@ -154,7 +154,6 @@ function runStartSkribblin(){
 			return menu();
 		}
 		return handleRunSkribbl(res[0]._id);
-		menu();
 	});
 }
 
@@ -181,7 +180,7 @@ function handleBrowser(res, startPos){
 		return menu();
 	}
 	if (res.length < printCount ) printCount = res.length;
-	var optionsArry = ['m', 'q', 'b']
+	var optionsArry = ['m', 'q', 'b'];
 	for (var i = startPos; i < printCount; i++){
 		console.log((i+1) + '   ' + res[i].story_name.blue + '\n        ' + res[i].content.substr(0, 42).trim() + '...'.green); 
 		optionsArry.push(Number(i+1).toString());
@@ -232,12 +231,12 @@ function handkleSkribblChildren(skribblTree){
 	console.log('\t\t\tstory: '.green + first_skribbl.story_name.blue);
 	console.log(wordWrap(first_skribbl.content, {indent: '     ', width: 60}));
 	console.log();
-	if (first_skribbl.children.length == 0) {
+	if (first_skribbl.children.length === 0) {
 		console.log('you have foundyourself at the maximum depth o\' dis story'.blue);
 		//console.log('---> f to fork and coninue the story'.cyan);
 		//console.log('---> b to return to menu'.cyan);
 	}
-	var inputValidation = ['f', 'b']
+	var inputValidation = ['f', 'b'];
 	for (var i = 0; i < first_skribbl.children.length; i++){
 		console.log( (i + 1) + '    ' + first_skribbl.children[i].content.substr(0, 40).trim() + '...'.green);
 		inputValidation.push(Number(i+1).toString());
@@ -255,7 +254,7 @@ function handkleSkribblChildren(skribblTree){
 			var parnt_id = first_skribbl._id;
 			var stry_name = first_skribbl.story_name;
 			var stry_id;
-			if (first_skribbl.parent_skribbl == null) {
+			if (first_skribbl.parent_skribbl === null) {
 				stry_id = first_skribbl._id;
 			} else {
 				stry_id = first_skribbl.story_id;
@@ -280,7 +279,6 @@ function runTimeline(){
 		}
 		console.log('heres all your posts'.blue);
 		return handleBrowser(res, 0);
-		menu();
 	});
 }
 
@@ -325,7 +323,7 @@ function runCreateNewStory(){
 }
 
 function handleForkAStory(story_name, parrent_id, story_id, genre){
-	var skribblObj = {}
+	var skribblObj = {};
 	skribblObj.story_name = story_name;
 	skribblObj.story_id = story_id;
 	skribblObj.parent_skribbl = parrent_id;
@@ -334,7 +332,7 @@ function handleForkAStory(story_name, parrent_id, story_id, genre){
 	console.log('nows your chance to ruin this cute attempt at literature\ngo ahead... do your worst!'.cyan); 
 	console.log();
 	var input = readline('---> '.green);
-	if (input == '') {
+	if (input === '') {
 		console.log('awww sluuuug, i wont let you get away with not trying... write something'.blue);
 		return handleForkAStory(story_name, parrent_id, story_id, genre);
 	}
