@@ -9,6 +9,7 @@ var postSkribbl = require('./lib/routes/skribbl_routes.js').createSkribbl;
 var storysBrowse = require('./lib/routes/story_routes.js').main;
 var fetchSkribbl = require('./lib/routes/skribbl_routes.js').getSkribblTree;
 var wordWrap = require('word-wrap');
+var randomStoryFetch = require('./lib/routes/story_routes.js').random;
 
 var skribblURL = 'https://skribbl-app.herokuapp.com';
 var userToken = null;
@@ -137,8 +138,14 @@ function runLogin(){
 }
 
 function runStartSkribblin(){
-	console.log('should fetch a skribbl story'.magenta);
-	menu();
+	randomStoryFetch(skribblURL, '', function(err, res){
+		if (err){
+			console.log('dawg nabbit, that didnt work'.magenta);
+			return menu();
+		}
+		return handleRunSkribbl(res[0]._id);
+		menu();
+	});
 }
 
 function runQuit(){
@@ -318,5 +325,6 @@ function handleForkAStory(story_name, parrent_id, story_id, genre){
 
 	});
 }
+
 
 // start program
