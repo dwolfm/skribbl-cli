@@ -3,8 +3,8 @@
 var readline = require('readline-sync').question;
 var colors = require('colors');
 var token = require('./lib/token.js');
-var createUser = require('./lib/create_user.js');
-var login = require('./lib/login.js');
+var createUser = require('./lib/routes/users_routes.js').createUser;
+var login = require('./lib/routes/users_routes.js').loginUser;
 
 var skribblURL = 'localhost:3000';
 var userToken = null;
@@ -91,11 +91,13 @@ function runMakePassword(uname, email){
 				return runCreateUser();
 			}
 			// login and save token
-			return login(skribblURL, uname, pass1, handleLogin);
+			login(skribblURL, uname, pass1, handleLogin);
 		});	
-	} 
+		;
+	}else { 
 	console.log('passwords didnt match'.rainbow);
 	runMakePassword(uname, email);
+	}
 }
 
 function handleLogin(err, data){
