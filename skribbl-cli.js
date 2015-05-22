@@ -108,7 +108,7 @@ function runMakePassword(uname, email){
 				return runCreateUser();
 			}
 			// login and save token
-			login(skribblURL, uname, pass1, handleLogin);
+			login(skribblURL, email, pass1, handleLogin);
 		});	
 	}else { 
 	console.log('passwords didnt match'.rainbow);
@@ -119,7 +119,7 @@ function runMakePassword(uname, email){
 function handleLogin(err, data){
 	if (err) {
 		console.log('erororor: something went wrong lgin in'.cyan);
-		console.log(data);
+		console.log(err);
 		return runLoginvsCreate(); 
 	}
 	if (!data.eat){

@@ -1,6 +1,6 @@
 {
   "name": "skribbl-cli",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "a command line interface for contributing to skribble choose your own adventure storys with the skribbl api.",
   "main": "skribbl-cli.js",
 	"bin": {
